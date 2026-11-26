@@ -44,7 +44,7 @@ const MOM_E24 = 0.05; // or r24 above +5%
 const EARLY_R12 = 0.05; // early lane: r12 above +5%
 const EARLY_UPTO = 30; // early lane only while a symbol has <= this many closes
 const HI_LB = 24; // main lane high lookback
-const HI_NEAR = 0.98; // close within 2% of the HI_LB high
+const HI_NEAR = 1.0; // close strictly above the HI_LB-close high (a real breakout)
 const MOM_X24 = -0.02; // exit when r24 back under -2%
 const DON_LO = 18; // exit on a break of the DON_LO-close low
 const MOM_STOP_NUM = 92n; // exit under 92/100 of cost

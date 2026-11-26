@@ -12,8 +12,9 @@ regime-adaptive rather than a single fitted rule:
   ~2% off its 6-close low — the selling looks spent. Buys the most oversold first, at most twice
   per symbol per window. Exits: +8% target, a 3% giveback once up 3%, or −8%.
 - **Trend (momentum):** early in the window, r12 > +5% catches a rally young; afterwards an
-  established-trend gate (r12 > +4% or r24 > +5% **and** the close within 2% of its 24-bar high, so
-  a chop bounce does not read as a trend). Exits: an 18-bar-low break, r24 back under −2%, or −8%.
+  established-trend gate (r12 > +4% or r24 > +5% **and** the close above its 24-close high — a real
+  breakout, so a chop bounce does not read as a trend). Exits: an 18-bar-low break, r24 back under
+  −2%, or −8%.
 - **Per-leg circuit breaker:** two exits in a row marked at a loss pause that leg's new entries for
   16 bars — chop stops costing after a couple of probes. A portfolio equity guard blocks new
   entries under 85% of the window's equity peak.
