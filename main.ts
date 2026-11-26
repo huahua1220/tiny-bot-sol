@@ -83,6 +83,8 @@ let eqPeak = 0n;
 /** Per-leg loss streaks and the bar each leg's entries resume. */
 const streak: Record<Kind, number> = { mr: 0, mom: 0 };
 const legBlockedUntil: Record<Kind, number> = { mr: -1, mom: -1 };
+/** Symbols whose current exit already counted toward the streak (a retried sell counts once). */
+const streakCounted = new Set<string>();
 /** Filled orders so far, for the trades floor. */
 let trades = 0;
 /** The insurance position (buy filled, not yet sold), if any. */
@@ -115,7 +117,6 @@ function buySlice(state: BarsState, symbol: string, cashShare: bigint): bigint {
 
 await runBars({
   onBatch(state, batch) {
-    const fresh = new Set<string>();
     for (const bar of batch.bars) {
       let t = tapes.get(bar.symbol);
       if (t === undefined) {
@@ -124,7 +125,6 @@ await runBars({
       }
       t.signalled = bar.v !== '0';
       t.closes.push(Number(bar.c));
-      fresh.add(bar.symbol);
     }
     for (const f of batch.fills) {
       if (f.status === 'filled') trades++;
@@ -181,13 +181,16 @@ await runBars({
         exitsNow.add(symbol);
         sells.push({ side: 'sell', symbol, qty: held.qty, max_slippage_bps: MAX_SELL_SLIPPAGE });
         soldAt.set(symbol, state.seq);
-        if (val < held.cost) {
-          streak[kd]++;
-          if (streak[kd] >= BRK_LOSSES) {
-            legBlockedUntil[kd] = state.seq + BRK_PAUSE;
-            streak[kd] = 0;
-          }
-        } else streak[kd] = 0;
+        if (!streakCounted.has(symbol)) {
+          streakCounted.add(symbol);
+          if (val < held.cost) {
+            streak[kd]++;
+            if (streak[kd] >= BRK_LOSSES) {
+              legBlockedUntil[kd] = state.seq + BRK_PAUSE;
+              streak[kd] = 0;
+            }
+          } else streak[kd] = 0;
+        }
       }
     }
 
@@ -263,6 +266,7 @@ await runBars({
         cash -= slice;
         made++;
         kinds.set(symbol, kd);
+        streakCounted.delete(symbol);
         peakPx.set(symbol, closes(tape(state, symbol)!).at(-1)!);
         if (kd === 'mr') mrTried.set(symbol, (mrTried.get(symbol) ?? 0) + 1);
       }
