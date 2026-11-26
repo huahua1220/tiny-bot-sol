@@ -13,17 +13,32 @@ Weighted 6/12/24-bar momentum score entries, score exits, -10% stops.
 - Per-asset: all 7 negative (-17 to -229). Verdict: REJECTED — the dev window's crash-then-chop
   whipsaws momentum entries; 31 round trips of fee+slippage+fade bleed.
 
-## Round 2 — capitulation MR + gated trend + circuit breaker (HEAD)
+## Round 2 — capitulation MR + gated trend + circuit breaker
 
 - Dev Net PnL: **+138.35 USDC** (margin **+1007.69** vs B&H)
 - Max DD 4.0%, 10 trades over 6 symbols, win rate 50%, fees 20.7 USDC, exposure 51.2%, 1 rejected
 - At 2x fees: +117.51 USDC — still positive.
 - Per-asset: POPCAT +214.7, FARTCOIN +34.4, WETH +0.1, JITOSOL -0.0, WIF -31.2, RAY -79.7, SOL 0.
-  Driven by the crash-bottom dip buys (bar ~25); profit concentrated in POPCAT but the entry
-  family (4 simultaneous dip buys) is structural, not a one-symbol fluke.
 - result_sha256 8ce199b56899b16c4320976d41c218777cb1267820ee0241f8fdc333b8a8ea0f
+
+## Round 3 — strict new-high breakout gate (HEAD, best)
+
+Same book as round 2; the established-trend lane now requires the close strictly above its 24-close
+high (a real breakout) instead of within 2% of it. Keeps the trend leg firing only on genuine
+strength — chop bounces stop qualifying — at a small cost to how early it joins a rally.
+
+- Dev Net PnL: **+169.51 USDC** (margin **+1038.85** vs B&H) — kept, beats round 2.
+- Max DD 3.8%, 8 trades over 5 symbols, win rate 60%, fees 15.5 USDC, exposure 43.2%, 1 rejected
+- At 2x fees: +153.76 USDC — still positive.
+- Per-asset: POPCAT +214.7, FARTCOIN +34.4, WETH +0.1, JITOSOL -0.0, RAY -79.7, WIF 0, SOL 0.
+  Driven by the crash-bottom dip buys (bar ~25); the four simultaneous capitulation entries are a
+  structural bet on the sell-off being spent, not a one-symbol fluke.
+- result_sha256 e4046c22b15dcc05b6243e2aee369fdd776df2d2ebcc8a9a530c51e22d8130aa
 - Robustness (local replay with the same fill model + synthetic 72-bar regimes, 5 seeds):
   crash +5-6k, V-shape +2k, downtrend +1.2-1.5k margin; flat/chop near 0; smooth uptrend
   trails B&H (late entries, structural). Loss-streak circuit breaker bounds chop bleed.
-  Flat-window check: insurance fills reach 8 trades at ~0.5 USDC cost.
+  Flat-window check: insurance fills reach 8 trades at ~0.5 USDC cost. Worst simulated DD ~18%
+  (grinding downtrend), under the 25% guardrail.
+- House baselines on dev for context: B&H -869.3, momentum -268.2, ema-cross -173.0,
+  adx-momentum -114.4 — this entry's +169.5 is above all of them.
 - Determinism: grade-local double execution + L1 regrade reproduced byte for byte.
