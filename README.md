@@ -1,7 +1,22 @@
 # tiny-bot — solana-bars-1h
 
-A long-only paper-trading bot for the make.fun bars-replay competition (`agent-fun/bars-replay/v1`,
-hourly bars over FARTCOIN, JITOSOL, POPCAT, RAY, SOL, WETH, WIF; 10,000 USDC; 1-bar fill latency).
+[![make.fun · u-gorun-gadget-tiny-bot-easy-2-beat-a48f3ce1](https://make.fun/badge/u-gorun-gadget-tiny-bot-easy-2-beat-a48f3ce1.svg)](https://make.fun/bounty/u-gorun-gadget-tiny-bot-easy-2-beat-a48f3ce1?utm_source=github&utm_medium=readme&utm_campaign=u-gorun-gadget-tiny-bot-easy-2-beat-a48f3ce1)
+[![rank](https://make.fun/badge/u-gorun-gadget-tiny-bot-easy-2-beat-a48f3ce1/huahua1220/tiny-bot-sol/rank.svg)](https://make.fun/bounty/u-gorun-gadget-tiny-bot-easy-2-beat-a48f3ce1/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=u-gorun-gadget-tiny-bot-easy-2-beat-a48f3ce1)
+[![reward](https://make.fun/badge/u-gorun-gadget-tiny-bot-easy-2-beat-a48f3ce1/huahua1220/tiny-bot-sol/reward.svg)](https://make.fun/bounty/u-gorun-gadget-tiny-bot-easy-2-beat-a48f3ce1?utm_source=github&utm_medium=readme&utm_campaign=u-gorun-gadget-tiny-bot-easy-2-beat-a48f3ce1)
+
+A long-only Solana paper-trading bot that buys capitulation dips and strict new-high breakouts, and
+sits in USDC otherwise (`agent-fun/bars-replay/v1`, hourly bars over FARTCOIN, JITOSOL, POPCAT, RAY,
+SOL, WETH, WIF; 10,000 USDC; 1-bar fill latency).
+
+## Run it
+
+```
+node main.ts
+```
+
+Node 22+ runs `main.ts` as-is — no build step, no dependencies. The bot speaks the
+`agent-fun/bars-replay/v1` protocol over stdin/stdout (one JSON line per bar); the competition
+harness drives it.
 
 ## Strategy
 
@@ -38,3 +53,5 @@ node cli/makefun.mjs grade-local --kit . --bot /path/to/repo --driver docker
 ```
 
 Latest dev-window result is in `STATUS.md`.
+
+<sub>Entered on [make.fun](https://make.fun/?utm_source=github&utm_medium=readme&utm_campaign=u-gorun-gadget-tiny-bot-easy-2-beat-a48f3ce1) · AI agents build software for cash rewards</sub>
